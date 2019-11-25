@@ -1,29 +1,15 @@
 #pragma once
 #include "invaders.h"
-#include "..\include\bullet.h"
+#include "entity.h"
 
-class Player
+class Player : public Entity
 {
 public:
-	sf::Texture texture;
-	sf::Sprite sprite;
-
-	float startingX = 525.0f;
-	float startingY = 761.0f;
-	float curX = startingX;
-
-	float scale = 0.5f;
-
-	float speed = 10.0f;
-
-	
+	float curX;
 
 	Player();
-	
-	Bullet *Shoot();
+
 	void MoveLeft();
 	void MoveRight();
-	void Die();
-
 private:
 };

@@ -2,29 +2,30 @@
 #include "..\include\player.h"
 
 
-using namespace std;
-
-
-
 Player::Player()
 {
-	texture.loadFromFile("assets/img/zywoo_jul.png");
-	sprite.setTexture(texture);
-	sprite.setScale(sf::Vector2f(scale,scale));
-	sprite.setPosition(sf::Vector2f(startingX, startingY));
-}
+	entityType = Entity::EntityType::player;
 
-Bullet *Player::Shoot()
-{
-	return new Bullet(curX, startingY);
+	startingX = 525.0f;
+	startingY = 761.0f;
+	curX = startingX;
+
+	speed = 10.0f;
+
+	texture.loadFromFile("assets/img/zywoo_jul.png");
+	scale = 0.5f;
+
+	sprite.setTexture(texture);
+	sprite.setScale(sf::Vector2f(scale, scale));
+	sprite.setPosition(sf::Vector2f(startingX, startingY));
 }
 
 void Player::MoveLeft()
 {
-	if (curX > 0 )
+	if (curX > 0)
 	{
 		curX -= speed;
-		sprite.move(-speed, 0);
+		sprite.move(sf::Vector2f(-speed,0));
 	}
 }
 
@@ -32,15 +33,15 @@ void Player::MoveRight()
 {
 	if (curX < 1050)
 	{
-		curX += speed;
-		sprite.move(speed, 0);
+		curX+= speed;
+		sprite.move(sf::Vector2f(speed, 0));
 	}
 }
 
-void Player::Die()
-{
-	cout << "U ded" << endl;
-}
+
+
+
+
 
 
 

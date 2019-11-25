@@ -37,9 +37,6 @@ private:
 	sf::Time timer;
 	void UpdateTimer(sf::Time);
 
-
-	std::vector<Bullet*> bullets;
-
 public:
     Game(void);
     ~Game();
