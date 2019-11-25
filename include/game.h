@@ -1,6 +1,7 @@
 #pragma once
 #include "invaders.h"
 #include "player.h"
+#include "bullet.h"
 
 /*
 ** Game handling
@@ -20,7 +21,10 @@ private:
 
 	Player player;
 
-	
+	//Textures manager
+	sf::Texture chickenBulletTexture;;
+
+
 	//Event manager
 	bool isLeftArrowPressed = false;
 	bool isRightArrowPressed = false;
@@ -36,6 +40,10 @@ private:
 	//Timer manager
 	sf::Time timer;
 	void UpdateTimer(sf::Time);
+
+	//Bullet manager
+	std::vector<Bullet> playerBullets;
+	std::vector<Bullet> ennemiesBullets;
 
 public:
     Game(void);

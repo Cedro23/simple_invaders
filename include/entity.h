@@ -23,8 +23,8 @@ public:
 
 	float speed;
 
-
-	
+	Entity(float, float);
+	Entity();
 
 private:
 };

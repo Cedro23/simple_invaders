@@ -17,6 +17,7 @@ Game::~Game()
 
 void Game::load()
 {
+	chickenBulletTexture.loadFromFile("assets/img/chicken_bullet.png");
 	font.loadFromFile("assets/fonts/CosmicAlien.ttf");
 }
 
@@ -49,6 +50,17 @@ void Game::update(sf::Time elapsedTime)
 	UpdateTimer(elapsedTime);
 	DisplayScore();
 	window.draw(player.sprite);
+
+	for (int i = 0; i < playerBullets.size(); i++)
+	{
+		window.draw(playerBullets[i].sprite);
+		playerBullets[i].MoveForward();
+		if (playerBullets[i].curY > 1550)
+		{
+			playerBullets.erase(playerBullets.begin() + i);
+		}
+	}
+
 
 	if (isLeftArrowPressed)
 	{
@@ -117,7 +129,7 @@ void Game::HandleEvent(sf::Event event, bool isTrue)
 		{
 			if (!isSpacebarPressed)
 			{
-				UpdateScore(200);
+				playerBullets.push_back(player.Shoot(chickenBulletTexture));
 				isSpacebarPressed = true;
 			}
 		}

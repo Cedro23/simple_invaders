@@ -38,6 +38,12 @@ void Player::MoveRight()
 	}
 }
 
+Bullet Player::Shoot(sf::Texture& texture)
+{
+	//Passer la référence de ma bullet
+	return Bullet(this->curX, this->startingY + 35, texture, 0.1f);
+}
+
 
 
 
