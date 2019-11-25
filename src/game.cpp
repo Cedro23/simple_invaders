@@ -50,18 +50,7 @@ void Game::update(sf::Time elapsedTime)
 	UpdateTimer(elapsedTime);
 	DisplayScore();
 	window.draw(player.sprite);
-
-	for (int i = 0; i < playerBullets.size(); i++)
-	{
-		window.draw(playerBullets[i].sprite);
-		playerBullets[i].MoveForward();
-		if (playerBullets[i].curY > 1550)
-		{
-			playerBullets.erase(playerBullets.begin() + i);
-		}
-	}
-
-
+	
 	if (isLeftArrowPressed)
 	{
 		player.MoveLeft();
@@ -92,6 +81,23 @@ void Game::run()
 			this->update(TimePerFrame);
 		}
 		this->window.display();
+	}
+}
+
+#pragma endregion
+
+#pragma region Bullets
+
+void Game::BulletManager()
+{
+	for (int i = 0; i < playerBullets.size(); i++)
+	{
+		window.draw(playerBullets[i].sprite);
+		playerBullets[i].MoveForward();
+		if (playerBullets[i].curY > 1550)
+		{
+			playerBullets.erase(playerBullets.begin() + i);
+		}
 	}
 }
 
@@ -141,6 +147,11 @@ void Game::HandleEvent(sf::Event event, bool isTrue)
 		{
 			isRightArrowPressed = true;
 		}
+		else if (event.key.code == 36) //echap
+		{
+			exit(0);
+		}
+
 	}
 	else
 	{
