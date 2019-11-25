@@ -50,6 +50,7 @@ void Game::update(sf::Time elapsedTime)
 	UpdateTimer(elapsedTime);
 	DisplayScore();
 	window.draw(player.sprite);
+	UpdateBullets();
 	
 	if (isLeftArrowPressed)
 	{
@@ -88,7 +89,7 @@ void Game::run()
 
 #pragma region Bullets
 
-void Game::BulletManager()
+void Game::UpdateBullets()
 {
 	for (int i = 0; i < playerBullets.size(); i++)
 	{

@@ -42,7 +42,7 @@ private:
 	void UpdateTimer(sf::Time);
 
 	//Bullet manager
-	void BulletManager();
+	void UpdateBullets();
 	std::vector<Bullet> playerBullets;
 	std::vector<Bullet> ennemiesBullets;
 
