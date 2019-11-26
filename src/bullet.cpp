@@ -3,9 +3,10 @@
 
 using namespace std;
 
-Bullet::Bullet(float x, float y, sf::Texture& texture, float scale) : Entity(x,y)
+Bullet::Bullet(float x, float y, sf::Texture& texture, float scale, EntityType shooterEntityType) : Entity(x,y)
 {
 	entityType = Entity::EntityType::bullet;
+	shooterEntity = shooterEntityType;
 
 	curY = startingY;
 
@@ -18,6 +19,14 @@ Bullet::Bullet(float x, float y, sf::Texture& texture, float scale) : Entity(x,y
 
 void Bullet::MoveForward()
 {
-	sprite.move(sf::Vector2f(0.0f, -speed));
-	curY += speed;
+	if (shooterEntity == EntityType::player)
+	{
+		sprite.move(sf::Vector2f(0.0f, -speed));
+		curY += speed;
+	}
+	if (shooterEntity == EntityType::enemy)
+	{
+		sprite.move(sf::Vector2f(0.0f, speed));
+		curY -= speed;
+	}
 }

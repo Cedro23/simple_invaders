@@ -86,6 +86,11 @@ void Game::update(sf::Time elapsedTime)
 		{
 			CheckForCollisions();
 		}
+		if (enemyManager.enemies.size() <= 0)
+		{
+			enemyManager.SpawnEnemies();
+			enemyManager.InitTextures(enemyTexture);
+		}
 		enemyManager.UpdateEnemies(window);
 		UpdatePlayer();
 		UpdateGameState(enemyManager.IsGameOver());

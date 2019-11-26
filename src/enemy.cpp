@@ -31,3 +31,8 @@ void Enemy::Move(bool isMovingRight)
 		sprite.move(sf::Vector2f(-speed, 0));
 	}
 }
+
+Bullet Enemy::Shoot(sf::Texture& texture)
+{
+	return Bullet(this->curX + 63.0f, this->startingY - 95, texture, 0.1f, EntityType::enemy);
+}

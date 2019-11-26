@@ -16,6 +16,8 @@ public:
 	void SpawnEnemies();
 	void InitTextures(sf::Texture&);
 	void UpdateEnemies(sf::RenderWindow&);
+	void ClearEnemies();
+	void ResetEnemies();
 	void MoveDown();
 	bool IsGameOver();
 

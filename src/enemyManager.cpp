@@ -65,6 +65,11 @@ void EnemyManager::UpdateEnemies(sf::RenderWindow& window)
 	}
 }
 
+void EnemyManager::ClearEnemies()
+{
+	enemies.clear();
+}
+
 bool EnemyManager::IsGameOver()
 {
 	return !isEnemyMoving;

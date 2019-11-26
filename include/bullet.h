@@ -7,7 +7,9 @@ class Bullet : public Entity
 public:
 	float curY;
 
-	Bullet(float, float, sf::Texture&, float);
+	EntityType shooterEntity;
+
+	Bullet(float, float, sf::Texture&, float, EntityType);
 
 	void MoveForward();
 

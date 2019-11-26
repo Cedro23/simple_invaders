@@ -40,14 +40,5 @@ void Player::MoveRight()
 
 Bullet Player::Shoot(sf::Texture& texture)
 {
-	//Passer la référence de ma bullet
-	return Bullet(this->curX, this->startingY + 35, texture, 0.1f);
+	return Bullet(this->curX + 0.0f, this->startingY + 95, texture, 0.1f, EntityType::player);
 }
-
-
-
-
-
-
-
-
