@@ -12,8 +12,9 @@ Player::Player()
 
 	speed = 10.0f;
 
-	texture.loadFromFile("assets/img/zywoo_jul.png");
 	scale = 0.5f;
+
+	texture.loadFromFile("assets/img/zywoo_jul.png");
 
 	sprite.setTexture(texture);
 	sprite.setScale(sf::Vector2f(scale, scale));

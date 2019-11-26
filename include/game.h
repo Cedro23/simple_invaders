@@ -1,7 +1,7 @@
 #pragma once
 #include "invaders.h"
 #include "player.h"
-#include "bullet.h"
+#include "enemy.h"
 
 /*
 ** Game handling
@@ -19,11 +19,15 @@ private:
     sf::RenderWindow window;
     sf::Font font;
 
+	//Entities manager
 	Player player;
+	void UpdatePlayer();
 
 	//Textures manager
-	sf::Texture chickenBulletTexture;;
-
+	sf::Texture playerBulletTexture;
+	sf::Texture playerTexture;
+	sf::Texture enemyBulletTexture;
+	sf::Texture enemyTexture;
 
 	//Event manager
 	bool isLeftArrowPressed = false;

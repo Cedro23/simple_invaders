@@ -10,7 +10,6 @@ public:
 	Bullet(float, float, sf::Texture&, float);
 
 	void MoveForward();
-	void DeleteBullet();
 
 private:
 };

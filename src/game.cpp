@@ -1,5 +1,4 @@
 #include "game.h"
-#include "player.h"
 #include <iostream>
 
 using namespace std;
@@ -17,7 +16,10 @@ Game::~Game()
 
 void Game::load()
 {
-	chickenBulletTexture.loadFromFile("assets/img/chicken_bullet.png");
+	playerTexture.loadFromFile("assets/img/zywoo_jul.png");
+	enemyTexture.loadFromFile("assets/img/s1mple.png");
+	playerBulletTexture.loadFromFile("assets/img/chicken_bullet.png");
+	enemyBulletTexture.loadFromFile("assets/img/dosia_bullet.png");
 	font.loadFromFile("assets/fonts/CosmicAlien.ttf");
 }
 
@@ -45,23 +47,6 @@ void Game::displayText(sf::Text text, float originX, float originY, float posX, 
 
 #pragma region Game Loop
 
-void Game::update(sf::Time elapsedTime)
-{
-	UpdateTimer(elapsedTime);
-	DisplayScore();
-	window.draw(player.sprite);
-	UpdateBullets();
-	
-	if (isLeftArrowPressed)
-	{
-		player.MoveLeft();
-	}
-	if (isRightArrowPressed)
-	{
-		player.MoveRight();
-	}
-}
-
 void Game::run()
 {
 	sf::Clock clock;
@@ -84,6 +69,33 @@ void Game::run()
 		this->window.display();
 	}
 }
+
+void Game::update(sf::Time elapsedTime)
+{
+	UpdateTimer(elapsedTime);
+	DisplayScore();
+	UpdateBullets();
+	UpdatePlayer();
+}
+
+#pragma endregion
+
+#pragma region Entities
+
+void Game::UpdatePlayer()
+{
+	window.draw(player.sprite);
+
+	if (isLeftArrowPressed)
+	{
+		player.MoveLeft();
+	}
+	if (isRightArrowPressed)
+	{
+		player.MoveRight();
+	}
+}
+
 
 #pragma endregion
 
@@ -136,7 +148,7 @@ void Game::HandleEvent(sf::Event event, bool isTrue)
 		{
 			if (!isSpacebarPressed)
 			{
-				playerBullets.push_back(player.Shoot(chickenBulletTexture));
+				playerBullets.push_back(player.Shoot(playerBulletTexture));
 				isSpacebarPressed = true;
 			}
 		}
