@@ -1,7 +1,7 @@
 #pragma once
 #include "invaders.h"
 #include "player.h"
-#include "enemy.h"
+#include "enemyManager.h"
 
 /*
 ** Game handling
@@ -21,6 +21,8 @@ private:
 
 	//Entities manager
 	Player player;
+	EnemyManager enemyManager;
+	void InitTextures();
 	void UpdatePlayer();
 
 	//Textures manager
@@ -46,10 +48,14 @@ private:
 	void UpdateTimer(sf::Time);
 
 	//Bullet manager
-	void UpdateBullets();
 	std::vector<Bullet> playerBullets;
 	std::vector<Bullet> ennemiesBullets;
+	void UpdateBullets();
+	void CheckForCollisions();
 
+	//Game State
+	bool isGameOver = false;
+	void UpdateGameState(bool);
 public:
     Game(void);
     ~Game();

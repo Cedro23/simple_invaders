@@ -14,9 +14,6 @@ Player::Player()
 
 	scale = 0.5f;
 
-	texture.loadFromFile("assets/img/zywoo_jul.png");
-
-	sprite.setTexture(texture);
 	sprite.setScale(sf::Vector2f(scale, scale));
 	sprite.setPosition(sf::Vector2f(startingX, startingY));
 }
@@ -38,6 +35,8 @@ void Player::MoveRight()
 		sprite.move(sf::Vector2f(speed, 0));
 	}
 }
+
+
 
 Bullet Player::Shoot(sf::Texture& texture)
 {

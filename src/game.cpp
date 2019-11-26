@@ -20,7 +20,10 @@ void Game::load()
 	enemyTexture.loadFromFile("assets/img/s1mple.png");
 	playerBulletTexture.loadFromFile("assets/img/chicken_bullet.png");
 	enemyBulletTexture.loadFromFile("assets/img/dosia_bullet.png");
-	font.loadFromFile("assets/fonts/CosmicAlien.ttf");
+	font.loadFromFile("assets/fonts/cs_regular.ttf");
+
+	enemyManager.SpawnEnemies();
+	InitTextures();
 }
 
 #pragma region Text
@@ -72,15 +75,44 @@ void Game::run()
 
 void Game::update(sf::Time elapsedTime)
 {
+	//éxecuter tout le temps
 	UpdateTimer(elapsedTime);
 	DisplayScore();
-	UpdateBullets();
-	UpdatePlayer();
+
+	if (!isGameOver) //si la partie est en cours
+	{
+		UpdateBullets();
+		if (playerBullets.size() > 0)
+		{
+			CheckForCollisions();
+		}
+		enemyManager.UpdateEnemies(window);
+		UpdatePlayer();
+		UpdateGameState(enemyManager.IsGameOver());
+	}
+	else //si la partie est finie
+	{
+		sf::Text gameOverText = createText("Game Over", sf::Color::White);
+		sf::FloatRect box = gameOverText.getLocalBounds();
+		gameOverText.setCharacterSize(75);
+		displayText(gameOverText, box.width, box.height, WINDOW_WIDTH / 2 - box.width / 4, WINDOW_HEIGHT / 2);
+	}
+}
+
+void Game::UpdateGameState(bool myBool)
+{
+	isGameOver = myBool;
 }
 
 #pragma endregion
 
 #pragma region Entities
+
+void Game::InitTextures()
+{
+	player.InitTexture(playerTexture);
+	enemyManager.InitTextures(enemyTexture);
+}
 
 void Game::UpdatePlayer()
 {
@@ -110,6 +142,33 @@ void Game::UpdateBullets()
 		if (playerBullets[i].curY > 1550)
 		{
 			playerBullets.erase(playerBullets.begin() + i);
+		}
+	}
+}
+
+void Game::CheckForCollisions()
+{
+	for (size_t i = 0; i < playerBullets.size(); i++)
+	{
+		sf::FloatRect pbBounds = playerBullets[i].sprite.getGlobalBounds();
+		sf::Vector2f bulletTop(pbBounds.left + (pbBounds.width / 2), pbBounds.top);
+
+		for (size_t j = 0; j < enemyManager.enemies.size(); j++)
+		{
+			sf::FloatRect enemyBounds = enemyManager.enemies[j].sprite.getGlobalBounds();
+			sf::Vector2f ennemyBotLeft(enemyBounds.left, enemyBounds.top + enemyBounds.height);
+			sf::Vector2f ennemyBotRight(enemyBounds.left + enemyBounds.width, enemyBounds.top + enemyBounds.height);
+
+			if (ennemyBotLeft.x < bulletTop.x && bulletTop.x < ennemyBotRight.x)
+			{
+				if (bulletTop.y <= ennemyBotLeft.y && ennemyBotLeft.y >= enemyBounds.top)
+				{
+					enemyManager.enemies.erase(enemyManager.enemies.begin() + j);
+					playerBullets.erase(playerBullets.begin() + i);
+					UpdateScore(50);
+					break;
+				}
+			}
 		}
 	}
 }
@@ -189,24 +248,28 @@ void Game::HandleEvent(sf::Event event, bool isTrue)
 
 void Game::UpdateTimer(sf::Time elapsedTime)
 {
+	static int curSeconds;
+	static int curMinutes;
 	sf::Text scoreText;
-	timer += elapsedTime;
-	int seconds = timer.asSeconds();
-	static int minutes = 0;
-
-	if (seconds >= 60)
+	if (!isGameOver)
 	{
-		minutes++;
-		timer = sf::Time::Zero;
+		timer += elapsedTime;
+		int seconds = timer.asSeconds();
+		curSeconds = seconds;
 	}
 
-	if (seconds >= 10)
+	if (curSeconds >= 60)
 	{
-		scoreText = createText(to_string(minutes) + ":" + to_string(seconds), sf::Color::White);
+		curMinutes++;
+		timer = sf::Time::Zero;
+	}
+	if (curSeconds >= 10)
+	{
+		scoreText = createText(to_string(curMinutes) + ":" + to_string(curSeconds), sf::Color::White);
 	}
 	else
 	{
-		scoreText = createText(to_string(minutes) + ":0" + to_string(seconds), sf::Color::White);
+		scoreText = createText(to_string(curMinutes) + ":0" + to_string(curSeconds), sf::Color::White);
 	}
 
 	sf::FloatRect box = scoreText.getLocalBounds();

@@ -25,6 +25,7 @@ public:
 
 	Entity(float, float);
 	Entity();
+	void InitTexture(sf::Texture&);
 
 private:
 };
