@@ -14,6 +14,23 @@ Enemy::Enemy(float x, float y) : Entity(x, y)
 
 	sprite.setScale(sf::Vector2f(scale, scale));
 	sprite.setPosition(sf::Vector2f(startingX, startingY));
+
+
+}
+
+Enemy::Enemy(float x, float y, float newSpeed) : Entity(x, y)
+{
+	entityType = Entity::EntityType::enemy;
+
+	curX = startingX;
+	curY = startingY;
+
+	speed = newSpeed;
+
+	scale = 0.1f;
+
+	sprite.setScale(sf::Vector2f(scale, scale));
+	sprite.setPosition(sf::Vector2f(startingX, startingY));
 }
 
 

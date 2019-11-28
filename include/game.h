@@ -19,6 +19,15 @@ private:
     sf::RenderWindow window;
     sf::Font font;
 
+	//Gamestates
+	enum class GameState {
+		menu,
+		game,
+		gameover
+	};
+	GameState gameState = GameState::game;
+	void UpdateGameState(GameState);
+
 	//Entities manager
 	Player player;
 	EnemyManager enemyManager;
@@ -38,6 +47,9 @@ private:
 	void ProcessEvents();
 	void HandleEvent(sf::Event, bool);
 
+	//Statistics
+	void UpdateStatistics(sf::Time);
+
 	//Score manager
 	int currentScore = 0;
 	void DisplayScore();
@@ -53,9 +65,9 @@ private:
 	void UpdateBullets();
 	void CheckForCollisions();
 
-	//Game State
-	bool isGameOver = false;
-	void UpdateGameState(bool);
+	//Levels
+	float enemySpeed = 1.0f;
+	
 public:
     Game(void);
     ~Game();

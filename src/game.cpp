@@ -16,6 +16,7 @@ Game::~Game()
 
 void Game::load()
 {
+	enemyManager.SetRenderWindow(window);
 	playerTexture.loadFromFile("assets/img/zywoo_jul.png");
 	enemyTexture.loadFromFile("assets/img/s1mple.png");
 	playerBulletTexture.loadFromFile("assets/img/chicken_bullet.png");
@@ -69,17 +70,20 @@ void Game::run()
 			ProcessEvents();
 			this->update(TimePerFrame);
 		}
+		//éxecuter tout le temps
+		UpdateStatistics(elapsedTime);
+
 		this->window.display();
 	}
 }
 
 void Game::update(sf::Time elapsedTime)
 {
-	//éxecuter tout le temps
-	UpdateTimer(elapsedTime);
-	DisplayScore();
-
-	if (!isGameOver) //si la partie est en cours
+	if (gameState == GameState::menu) //si dans le menu
+	{
+		//create menu
+	}
+	else if (gameState == GameState::game) //si la partie est en cours
 	{
 		UpdateBullets();
 		if (playerBullets.size() > 0)
@@ -88,14 +92,18 @@ void Game::update(sf::Time elapsedTime)
 		}
 		if (enemyManager.enemies.size() <= 0)
 		{
-			enemyManager.SpawnEnemies();
+			//clear bullets. center player
+			playerBullets.clear();
+			enemySpeed *= 1.07f;
+			enemyManager.SpawnEnemies(enemySpeed);
 			enemyManager.InitTextures(enemyTexture);
 		}
-		enemyManager.UpdateEnemies(window);
+		enemyManager.UpdateEnemies();
 		UpdatePlayer();
-		UpdateGameState(enemyManager.IsGameOver());
+		if (enemyManager.IsGameOver())
+			UpdateGameState(GameState::gameover);
 	}
-	else //si la partie est finie
+	else if (gameState == GameState::gameover) //si la partie est finie
 	{
 		sf::Text gameOverText = createText("Game Over", sf::Color::White);
 		sf::FloatRect box = gameOverText.getLocalBounds();
@@ -104,9 +112,18 @@ void Game::update(sf::Time elapsedTime)
 	}
 }
 
-void Game::UpdateGameState(bool myBool)
+void Game::UpdateGameState(GameState updatedGameState)
 {
-	isGameOver = myBool;
+	gameState = updatedGameState;
+}
+
+void Game::UpdateStatistics(sf::Time elapsedTime)
+{
+	if (gameState == GameState::game || gameState == GameState::gameover)
+	{
+		UpdateTimer(elapsedTime);
+		DisplayScore();
+	}
 }
 
 #pragma endregion
@@ -256,7 +273,7 @@ void Game::UpdateTimer(sf::Time elapsedTime)
 	static int curSeconds;
 	static int curMinutes;
 	sf::Text scoreText;
-	if (!isGameOver)
+	if (gameState == GameState::game)
 	{
 		timer += elapsedTime;
 		int seconds = timer.asSeconds();

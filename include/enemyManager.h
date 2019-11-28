@@ -6,6 +6,7 @@ class EnemyManager
 {
 public:
 	std::vector<Enemy> enemies;
+	sf::RenderWindow* window;
 
 	EnemyManager();
 	//~EnemyManager();
@@ -13,11 +14,13 @@ public:
 	bool isMovingRight = true;
 	bool isEnemyMoving = true;
 
+	void SetRenderWindow(sf::RenderWindow&);
 	void SpawnEnemies();
+	void SpawnEnemies(float);
 	void InitTextures(sf::Texture&);
-	void UpdateEnemies(sf::RenderWindow&);
+	void RenderEnemy(Enemy);
+	void UpdateEnemies();
 	void ClearEnemies();
-	void ResetEnemies();
 	void MoveDown();
 	bool IsGameOver();
 

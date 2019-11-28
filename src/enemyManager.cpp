@@ -8,6 +8,11 @@ EnemyManager::EnemyManager()
 
 }
 
+void EnemyManager::SetRenderWindow(sf::RenderWindow& gameWindow)
+{
+	window = &gameWindow;
+}
+
 void EnemyManager::SpawnEnemies()
 {
 	int x = 100;
@@ -16,6 +21,21 @@ void EnemyManager::SpawnEnemies()
 	for (size_t i = 1; i <= 55; i++)
 	{
 		enemies.push_back(Enemy::Enemy(i % 11 * x + 20, y));
+		if (i % 11 == 0)
+		{
+			y += 100;
+		}
+	}
+}
+
+void EnemyManager::SpawnEnemies(float newSpeed)
+{
+	int x = 100;
+	int y = 80;
+
+	for (size_t i = 1; i <= 55; i++)
+	{
+		enemies.push_back(Enemy::Enemy(i % 11 * x + 20, y, newSpeed));
 		if (i % 11 == 0)
 		{
 			y += 100;
@@ -46,16 +66,22 @@ void EnemyManager::InitTextures(sf::Texture& texture)
 	for (size_t i = 0; i < enemies.size(); i++)
 	{
 		enemies[i].InitTexture(texture);
+		RenderEnemy(enemies[i]);
 	}
 }
 
-void EnemyManager::UpdateEnemies(sf::RenderWindow& window)
+void EnemyManager::RenderEnemy(Enemy enemy)
+{
+	window->draw(enemy.sprite);
+}
+
+void EnemyManager::UpdateEnemies()
 {
 	for (size_t i = 0; i < enemies.size(); i++)
 	{
-		window.draw(enemies[i].sprite);
 		if (isEnemyMoving)
 		{
+			RenderEnemy(enemies[i]);
 			if ((enemies[i].curX > 1150 && isMovingRight) || (enemies[i].curX <= 0 && !isMovingRight))
 			{
 				MoveDown();
