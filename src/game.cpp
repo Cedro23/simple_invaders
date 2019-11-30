@@ -186,7 +186,6 @@ void Game::UpdateBullets()
 		if (playerBullets[i].curY <= 0)
 		{
 			playerBullets.erase(playerBullets.begin() + i);
-			cout << "Destroy Player Bullet" << endl;
 		}
 	}
 
@@ -194,11 +193,10 @@ void Game::UpdateBullets()
 	{
 		window.draw(enemiesBullets[i].sprite);
 		enemiesBullets[i].MoveForward();
-		cout << enemiesBullets[i].curY << endl;
+
 		if (enemiesBullets[i].curY >= 900)
 		{
 			enemiesBullets.erase(enemiesBullets.begin() + i);
-			cout << "Destroy Enemy Bullet" << endl;
 		}
 	}
 }
@@ -208,17 +206,22 @@ void Game::CheckForCollisions()
 	for (size_t i = 0; i < playerBullets.size(); i++)
 	{
 		sf::FloatRect pbBounds = playerBullets[i].sprite.getGlobalBounds();
-		sf::Vector2f bulletTop(pbBounds.left + (pbBounds.width / 2), pbBounds.top);
+		float x1 = pbBounds.left; //left x 
+		float x2 = pbBounds.left + pbBounds.width; //right x 
+		float y1 = pbBounds.top; //top y 
+		float y2 = pbBounds.top + pbBounds.height; //bot y
 
+		
+		 
 		for (size_t j = 0; j < enemyManager.enemies.size(); j++)
 		{
 			sf::FloatRect enemyBounds = enemyManager.enemies[j].sprite.getGlobalBounds();
 			sf::Vector2f ennemyBotLeft(enemyBounds.left, enemyBounds.top + enemyBounds.height);
-			sf::Vector2f ennemyBotRight(enemyBounds.left + enemyBounds.width, enemyBounds.top + enemyBounds.height);
+			sf::Vector2f ennemyTopRight(enemyBounds.left + enemyBounds.width, enemyBounds.top);
 
-			if (ennemyBotLeft.x < bulletTop.x && bulletTop.x < ennemyBotRight.x)
+			if ((ennemyBotLeft.x <= x1 && x1 <= ennemyTopRight.x) || (ennemyBotLeft.x <= x2 && x2 <= ennemyTopRight.x))
 			{
-				if (bulletTop.y <= ennemyBotLeft.y && ennemyBotLeft.y >= enemyBounds.top)
+				if ((ennemyBotLeft.y >= y1 && y1 >= ennemyTopRight.y) || (ennemyBotLeft.y >= y2 && y2 >= ennemyTopRight.y))
 				{
 					enemyManager.enemies.erase(enemyManager.enemies.begin() + j);
 					playerBullets.erase(playerBullets.begin() + i);
@@ -247,7 +250,6 @@ void Game::CheckForCollisions()
 
 			if (playerTopRight.y <= bulletBotLeft.y && bulletBotLeft.y <= playerBotRight.y)
 			{
-				cout << "prout 2" << endl;
 
 				gameState = GameState::gameover;
 				break;
