@@ -13,14 +13,14 @@ void EnemyManager::SetRenderWindow(sf::RenderWindow& gameWindow)
 	window = &gameWindow;
 }
 
-void EnemyManager::SpawnEnemies()
+void EnemyManager::SpawnEnemies(sf::Texture& bulletTexture)
 {
 	int x = 100;
 	int y = 80;
 
 	for (size_t i = 1; i <= 55; i++)
 	{
-		enemies.push_back(Enemy::Enemy(i % 11 * x + 20, y));
+		enemies.push_back(Enemy::Enemy(i % 11 * x + 20, y, bulletTexture));
 		if (i % 11 == 0)
 		{
 			y += 100;
@@ -28,14 +28,14 @@ void EnemyManager::SpawnEnemies()
 	}
 }
 
-void EnemyManager::SpawnEnemies(float newSpeed)
+void EnemyManager::SpawnEnemies(float newSpeed, sf::Texture& bulletTexture)
 {
 	int x = 100;
 	int y = 80;
 
 	for (size_t i = 1; i <= 55; i++)
 	{
-		enemies.push_back(Enemy::Enemy(i % 11 * x + 20, y, newSpeed));
+		enemies.push_back(Enemy::Enemy(i % 11 * x + 20, y, newSpeed, bulletTexture));
 		if (i % 11 == 0)
 		{
 			y += 100;

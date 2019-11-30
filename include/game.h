@@ -61,9 +61,12 @@ private:
 
 	//Bullet manager
 	std::vector<Bullet> playerBullets;
-	std::vector<Bullet> ennemiesBullets;
+	std::vector<Bullet> enemiesBullets;
 	void UpdateBullets();
 	void CheckForCollisions();
+	bool isEnemyShooting = true;
+	float cdTimer = 0.0f;
+	float cooldown = 2.0f;
 
 	//Levels
 	float enemySpeed = 1.0f;

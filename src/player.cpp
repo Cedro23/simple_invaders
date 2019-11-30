@@ -40,5 +40,5 @@ void Player::MoveRight()
 
 Bullet Player::Shoot(sf::Texture& texture)
 {
-	return Bullet(this->curX + 0.0f, this->startingY + 95, texture, 0.1f, EntityType::player);
+	return Bullet(this->curX + 60.0f, this->startingY - 50, texture, 0.1f, EntityType::player);
 }

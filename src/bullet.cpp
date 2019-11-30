@@ -12,9 +12,10 @@ Bullet::Bullet(float x, float y, sf::Texture& texture, float scale, EntityType s
 
 	speed = 10.0f;
 
+	//sprite.setOrigin(startingX, startingY);
 	sprite.setTexture(texture);
 	sprite.setScale(sf::Vector2f(scale, scale));
-	sprite.setPosition(sf::Vector2f(startingX + 63.0f, startingY - 60.0f));
+	sprite.setPosition(sf::Vector2f(startingX, startingY));
 }
 
 void Bullet::MoveForward()
@@ -22,11 +23,11 @@ void Bullet::MoveForward()
 	if (shooterEntity == EntityType::player)
 	{
 		sprite.move(sf::Vector2f(0.0f, -speed));
-		curY += speed;
+		curY -= speed;
 	}
 	if (shooterEntity == EntityType::enemy)
 	{
 		sprite.move(sf::Vector2f(0.0f, speed));
-		curY -= speed;
+		curY += speed;
 	}
 }

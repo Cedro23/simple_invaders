@@ -1,7 +1,9 @@
 #include <iostream>
 #include "..\include\enemy.h"
 
-Enemy::Enemy(float x, float y) : Entity(x, y)
+using namespace std;
+
+Enemy::Enemy(float x, float y, sf::Texture& bulTexture) : Entity(x, y)
 {
 	entityType = Entity::EntityType::enemy;
 
@@ -12,13 +14,13 @@ Enemy::Enemy(float x, float y) : Entity(x, y)
 
 	scale = 0.1f;
 
+	bulletTexture = &bulTexture;
+
 	sprite.setScale(sf::Vector2f(scale, scale));
 	sprite.setPosition(sf::Vector2f(startingX, startingY));
-
-
 }
 
-Enemy::Enemy(float x, float y, float newSpeed) : Entity(x, y)
+Enemy::Enemy(float x, float y, float newSpeed, sf::Texture& bulTexture) : Entity(x, y)
 {
 	entityType = Entity::EntityType::enemy;
 
@@ -28,6 +30,8 @@ Enemy::Enemy(float x, float y, float newSpeed) : Entity(x, y)
 	speed = newSpeed;
 
 	scale = 0.1f;
+
+	bulletTexture = &bulTexture;
 
 	sprite.setScale(sf::Vector2f(scale, scale));
 	sprite.setPosition(sf::Vector2f(startingX, startingY));
@@ -49,7 +53,7 @@ void Enemy::Move(bool isMovingRight)
 	}
 }
 
-Bullet Enemy::Shoot(sf::Texture& texture)
+Bullet Enemy::Shoot()
 {
-	return Bullet(this->curX + 63.0f, this->startingY - 95, texture, 0.1f, EntityType::enemy);
+	return Bullet(this->curX - 81, this->curY + 30, *bulletTexture, 0.1f, EntityType::enemy);
 }

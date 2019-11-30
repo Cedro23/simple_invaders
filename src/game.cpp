@@ -23,7 +23,7 @@ void Game::load()
 	enemyBulletTexture.loadFromFile("assets/img/dosia_bullet.png");
 	font.loadFromFile("assets/fonts/cs_regular.ttf");
 
-	enemyManager.SpawnEnemies();
+	enemyManager.SpawnEnemies(enemyBulletTexture);
 	InitTextures();
 }
 
@@ -86,19 +86,41 @@ void Game::update(sf::Time elapsedTime)
 	else if (gameState == GameState::game) //si la partie est en cours
 	{
 		UpdateBullets();
-		if (playerBullets.size() > 0)
+		if (playerBullets.size() > 0 || enemiesBullets.size() > 0)
 		{
 			CheckForCollisions();
 		}
 		if (enemyManager.enemies.size() <= 0)
 		{
-			//clear bullets. center player
+			//center player ?
 			playerBullets.clear();
 			enemySpeed *= 1.07f;
-			enemyManager.SpawnEnemies(enemySpeed);
+			enemyManager.SpawnEnemies(enemySpeed, enemyBulletTexture);
 			enemyManager.InitTextures(enemyTexture);
 		}
 		enemyManager.UpdateEnemies();
+		cdTimer += elapsedTime.asSeconds();
+		if (isEnemyShooting)
+		{
+			enemiesBullets.push_back(enemyManager.enemies[0].Shoot());
+			/*for (size_t i = 0; i < enemyManager.enemies.size(); i++)
+			{
+				float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+
+				if (r > 0.9f)
+				{
+					enemiesBullets.push_back(enemyManager.enemies[i].Shoot());
+				}
+
+			}*/
+			isEnemyShooting = false;
+		}
+		else if (cdTimer >= cooldown)
+		{
+			cdTimer = 0;
+			cooldown *= 0.9f;
+			//isEnemyShooting = true;
+		}
 		UpdatePlayer();
 		if (enemyManager.IsGameOver())
 			UpdateGameState(GameState::gameover);
@@ -161,9 +183,22 @@ void Game::UpdateBullets()
 	{
 		window.draw(playerBullets[i].sprite);
 		playerBullets[i].MoveForward();
-		if (playerBullets[i].curY > 1550)
+		if (playerBullets[i].curY <= 0)
 		{
 			playerBullets.erase(playerBullets.begin() + i);
+			cout << "Destroy Player Bullet" << endl;
+		}
+	}
+
+	for (int i = 0; i < enemiesBullets.size(); i++)
+	{
+		window.draw(enemiesBullets[i].sprite);
+		enemiesBullets[i].MoveForward();
+		cout << enemiesBullets[i].curY << endl;
+		if (enemiesBullets[i].curY >= 900)
+		{
+			enemiesBullets.erase(enemiesBullets.begin() + i);
+			cout << "Destroy Enemy Bullet" << endl;
 		}
 	}
 }
@@ -192,6 +227,37 @@ void Game::CheckForCollisions()
 				}
 			}
 		}
+	}
+
+	for (size_t i = 0; i < enemiesBullets.size(); i++)
+	{
+		sf::FloatRect bulletBounds = enemiesBullets[i].sprite.getGlobalBounds();
+		sf::Vector2f bulletBotLeft(bulletBounds.left, bulletBounds.top - bulletBounds.height);
+		sf::Vector2f bulletBotRight(bulletBounds.left + bulletBounds.width, bulletBounds.top - bulletBounds.height);
+		sf::Vector2f bulletTopLeft(bulletBounds.left, bulletBounds.top);
+
+		sf::FloatRect playerBounds = player.sprite.getGlobalBounds();
+		sf::Vector2f playerTopLeft(playerBounds.left, playerBounds.top);
+		sf::Vector2f playerTopRight(playerBounds.left + playerBounds.width, playerBounds.top);
+		sf::Vector2f playerBotRight(playerBounds.left + playerBounds.width, playerBounds.top - playerBounds.height);
+
+
+		if (playerTopLeft.x <= bulletBotLeft.x && bulletBotLeft.x <= playerTopRight.x)
+		{
+
+			if (playerTopRight.y <= bulletBotLeft.y && bulletBotLeft.y <= playerBotRight.y)
+			{
+				cout << "prout 2" << endl;
+
+				gameState = GameState::gameover;
+				break;
+			}
+			else if (bulletTopLeft.y <= playerBotRight.y)
+			{
+				enemiesBullets.erase(enemiesBullets.begin() + i);
+			}
+		}
+
 	}
 }
 

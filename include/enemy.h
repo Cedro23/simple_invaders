@@ -8,10 +8,13 @@ public:
 	float curX;
 	float curY;
 
-	Enemy(float, float);
-	Enemy(float, float, float);
+	sf::Texture* bulletTexture;
+
+	Enemy(float, float, sf::Texture&);
+	Enemy(float, float, float, sf::Texture&);
 
 	void Move(bool);
-	Bullet Shoot(sf::Texture&);
+	Bullet Shoot();
+	void ShootManager();
 private:
 };
