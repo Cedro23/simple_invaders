@@ -17,8 +17,3 @@ void Entity::InitTexture(sf::Texture& texture)
 {
 	sprite.setTexture(texture);
 }
-
-//void Entity::Die()
-//{
-//	cout << "U ded" << endl;
-//}

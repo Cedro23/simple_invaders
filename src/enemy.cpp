@@ -55,5 +55,5 @@ void Enemy::Move(bool isMovingRight)
 
 Bullet Enemy::Shoot()
 {
-	return Bullet(this->curX - 81, this->curY + 30, *bulletTexture, 0.1f, EntityType::enemy);
+	return Bullet(this->curX, this->curY + 30, *bulletTexture, 0.1f, EntityType::enemy);
 }

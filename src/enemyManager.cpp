@@ -45,7 +45,7 @@ void EnemyManager::SpawnEnemies(float newSpeed, sf::Texture& bulletTexture)
 
 void EnemyManager::MoveDown()
 {
-	if (enemies[enemies.size() - 1].curY + 50 > 680)
+	if (enemies[enemies.size() - 1].curY + 50 > 730)
 	{
 		isEnemyMoving = false;
 

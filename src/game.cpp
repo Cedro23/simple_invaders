@@ -94,7 +94,12 @@ void Game::update(sf::Time elapsedTime)
 		{
 			//center player ?
 			playerBullets.clear();
+			enemiesBullets.clear();
 			enemySpeed *= 1.07f;
+			cdTimer = 0.0f;
+			cooldown = 2.0f;
+			isEnemyShooting = false;
+			enemyShootCounter = 3;
 			enemyManager.SpawnEnemies(enemySpeed, enemyBulletTexture);
 			enemyManager.InitTextures(enemyTexture);
 		}
@@ -102,8 +107,7 @@ void Game::update(sf::Time elapsedTime)
 		cdTimer += elapsedTime.asSeconds();
 		if (isEnemyShooting)
 		{
-			enemiesBullets.push_back(enemyManager.enemies[0].Shoot());
-			/*for (size_t i = 0; i < enemyManager.enemies.size(); i++)
+			for (size_t i = 0; i < enemyManager.enemies.size(); i++)
 			{
 				float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 
@@ -112,14 +116,19 @@ void Game::update(sf::Time elapsedTime)
 					enemiesBullets.push_back(enemyManager.enemies[i].Shoot());
 				}
 
-			}*/
+			}
 			isEnemyShooting = false;
 		}
 		else if (cdTimer >= cooldown)
 		{
 			cdTimer = 0;
-			cooldown *= 0.9f;
-			//isEnemyShooting = true;
+			if (enemyShootCounter <= 0)
+			{
+				cooldown *= 0.9f;
+				enemyShootCounter = 3;
+			}
+			enemyShootCounter--;
+			isEnemyShooting = true;
 		}
 		UpdatePlayer();
 		if (enemyManager.IsGameOver())
@@ -203,15 +212,14 @@ void Game::UpdateBullets()
 
 void Game::CheckForCollisions()
 {
+	//Collisions for player bullets
 	for (size_t i = 0; i < playerBullets.size(); i++)
 	{
 		sf::FloatRect pbBounds = playerBullets[i].sprite.getGlobalBounds();
 		float x1 = pbBounds.left; //left x 
 		float x2 = pbBounds.left + pbBounds.width; //right x 
 		float y1 = pbBounds.top; //top y 
-		float y2 = pbBounds.top + pbBounds.height; //bot y
-
-		
+		float y2 = pbBounds.top + pbBounds.height; //bot y		
 		 
 		for (size_t j = 0; j < enemyManager.enemies.size(); j++)
 		{
@@ -232,31 +240,28 @@ void Game::CheckForCollisions()
 		}
 	}
 
+	//Collisions for enemy bullets
 	for (size_t i = 0; i < enemiesBullets.size(); i++)
 	{
 		sf::FloatRect bulletBounds = enemiesBullets[i].sprite.getGlobalBounds();
-		sf::Vector2f bulletBotLeft(bulletBounds.left, bulletBounds.top - bulletBounds.height);
-		sf::Vector2f bulletBotRight(bulletBounds.left + bulletBounds.width, bulletBounds.top - bulletBounds.height);
-		sf::Vector2f bulletTopLeft(bulletBounds.left, bulletBounds.top);
+		float x1 = bulletBounds.left; //left x 
+		float x2 = bulletBounds.left + bulletBounds.width; //right x 
+		float y1 = bulletBounds.top; //top y 
+		float y2 = bulletBounds.top + bulletBounds.height; //bot y
 
 		sf::FloatRect playerBounds = player.sprite.getGlobalBounds();
-		sf::Vector2f playerTopLeft(playerBounds.left, playerBounds.top);
+		sf::Vector2f playerBotLeft(playerBounds.left, playerBounds.top + playerBounds.height);
 		sf::Vector2f playerTopRight(playerBounds.left + playerBounds.width, playerBounds.top);
-		sf::Vector2f playerBotRight(playerBounds.left + playerBounds.width, playerBounds.top - playerBounds.height);
 
 
-		if (playerTopLeft.x <= bulletBotLeft.x && bulletBotLeft.x <= playerTopRight.x)
+		if ((playerBotLeft.x <= x1 && x1 <= playerTopRight.x) || (playerBotLeft.x <= x2 && x2 <= playerTopRight.x))
 		{
 
-			if (playerTopRight.y <= bulletBotLeft.y && bulletBotLeft.y <= playerBotRight.y)
-			{
-
-				gameState = GameState::gameover;
-				break;
-			}
-			else if (bulletTopLeft.y <= playerBotRight.y)
+			if ((playerBotLeft.y >= y1 && y1 >= playerTopRight.y) || (playerBotLeft.y >= y2 && y2 >= playerTopRight.y))
 			{
 				enemiesBullets.erase(enemiesBullets.begin() + i);
+				gameState = GameState::gameover;
+				break;
 			}
 		}
 

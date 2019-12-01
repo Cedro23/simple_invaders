@@ -7,12 +7,12 @@ Player::Player()
 	entityType = Entity::EntityType::player;
 
 	startingX = 525.0f;
-	startingY = 761.0f;
+	startingY = 811.0f;
 	curX = startingX;
 
 	speed = 10.0f;
 
-	scale = 0.5f;
+	scale = 0.2f;
 
 	sprite.setScale(sf::Vector2f(scale, scale));
 	sprite.setPosition(sf::Vector2f(startingX, startingY));
@@ -29,7 +29,7 @@ void Player::MoveLeft()
 
 void Player::MoveRight()
 {
-	if (curX < 1050)
+	if (curX < 1140)
 	{
 		curX+= speed;
 		sprite.move(sf::Vector2f(speed, 0));
@@ -40,5 +40,5 @@ void Player::MoveRight()
 
 Bullet Player::Shoot(sf::Texture& texture)
 {
-	return Bullet(this->curX + 60.0f, this->startingY - 50, texture, 0.1f, EntityType::player);
+	return Bullet(this->curX + 10.0f, this->startingY - 20.0f, texture, 0.1f, EntityType::player);
 }

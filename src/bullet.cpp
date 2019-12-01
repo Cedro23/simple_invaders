@@ -3,14 +3,21 @@
 
 using namespace std;
 
-Bullet::Bullet(float x, float y, sf::Texture& texture, float scale, EntityType shooterEntityType) : Entity(x,y)
+Bullet::Bullet(float x, float y, sf::Texture& texture, float scale, EntityType shooterEntityType) : Entity(x, y)
 {
 	entityType = Entity::EntityType::bullet;
 	shooterEntity = shooterEntityType;
 
 	curY = startingY;
 
-	speed = 10.0f;
+	if (shooterEntity == EntityType::player)
+	{
+		speed = 10.0f;
+	}
+	else if (shooterEntity == EntityType::enemy)
+	{
+		speed = 5.0f;
+	}
 
 	//sprite.setOrigin(startingX, startingY);
 	sprite.setTexture(texture);

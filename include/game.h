@@ -64,6 +64,7 @@ private:
 	std::vector<Bullet> enemiesBullets;
 	void UpdateBullets();
 	void CheckForCollisions();
+	int enemyShootCounter = 3;
 	bool isEnemyShooting = true;
 	float cdTimer = 0.0f;
 	float cooldown = 2.0f;
