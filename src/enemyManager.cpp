@@ -28,14 +28,14 @@ void EnemyManager::SpawnEnemies(sf::Texture& bulletTexture)
 	}
 }
 
-void EnemyManager::SpawnEnemies(float newSpeed, sf::Texture& bulletTexture)
+void EnemyManager::SpawnEnemies(float newSpeed, float newMaxCD, sf::Texture& bulletTexture)
 {
 	int x = 100;
 	int y = 80;
 
 	for (size_t i = 1; i <= 55; i++)
 	{
-		enemies.push_back(Enemy::Enemy(i % 11 * x + 20, y, newSpeed, bulletTexture));
+		enemies.push_back(Enemy::Enemy(i % 11 * x + 20, y, newSpeed, newMaxCD, bulletTexture));
 		if (i % 11 == 0)
 		{
 			y += 100;

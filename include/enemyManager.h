@@ -16,7 +16,7 @@ public:
 
 	void SetRenderWindow(sf::RenderWindow&);
 	void SpawnEnemies(sf::Texture&);
-	void SpawnEnemies(float, sf::Texture&);
+	void SpawnEnemies(float, float, sf::Texture&);
 	void InitTextures(sf::Texture&);
 	void RenderEnemy(Enemy);
 	void UpdateEnemies();

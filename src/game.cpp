@@ -82,6 +82,13 @@ void Game::update(sf::Time elapsedTime)
 	if (gameState == GameState::menu) //si dans le menu
 	{
 		//create menu
+		btnPlay.Render(&window);
+		btnHowToPlay.Render(&window);
+		btnQuit.Render(&window);
+
+		btnPlay.Update((sf::Vector2f)sf::Mouse::getPosition(window));
+		btnHowToPlay.Update((sf::Vector2f)sf::Mouse::getPosition(window));
+		btnQuit.Update((sf::Vector2f)sf::Mouse::getPosition(window));
 	}
 	else if (gameState == GameState::game) //si la partie est en cours
 	{
@@ -96,43 +103,38 @@ void Game::update(sf::Time elapsedTime)
 			playerBullets.clear();
 			enemiesBullets.clear();
 			enemySpeed *= 1.07f;
-			cdTimer = 0.0f;
-			cooldown = 2.0f;
+			maxCooldown *= 0.9f;
 			isEnemyShooting = false;
 			enemyShootCounter = 3;
-			enemyManager.SpawnEnemies(enemySpeed, enemyBulletTexture);
+			enemyManager.SpawnEnemies(enemySpeed, maxCooldown, enemyBulletTexture);
 			enemyManager.InitTextures(enemyTexture);
 		}
 		enemyManager.UpdateEnemies();
-		cdTimer += elapsedTime.asSeconds();
-		if (isEnemyShooting)
+		for (size_t i = 0; i < enemyManager.enemies.size(); i++)
 		{
-			for (size_t i = 0; i < enemyManager.enemies.size(); i++)
+			if (enemyManager.enemies[i].currentTimer >= enemyManager.enemies[i].shootingTimer)
 			{
-				float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-
-				if (r > 0.9f)
-				{
-					enemiesBullets.push_back(enemyManager.enemies[i].Shoot());
-				}
-
+				enemiesBullets.push_back(enemyManager.enemies[i].Shoot());
+				enemyManager.enemies[i].currentTimer = 0.0f;
+				enemyManager.enemies[i].shootingTimer = enemyManager.enemies[i].RandomFloat(0.5f, maxCooldown);
 			}
-			isEnemyShooting = false;
-		}
-		else if (cdTimer >= cooldown)
-		{
-			cdTimer = 0;
-			if (enemyShootCounter <= 0)
+			else
 			{
-				cooldown *= 0.9f;
-				enemyShootCounter = 3;
+				enemyManager.enemies[i].currentTimer += elapsedTime.asSeconds();
 			}
-			enemyShootCounter--;
-			isEnemyShooting = true;
 		}
 		UpdatePlayer();
 		if (enemyManager.IsGameOver())
 			UpdateGameState(GameState::gameover);
+	}
+	else if (gameState == GameState::pause)
+	{
+		DisplayScore();
+		UpdateTimer(elapsedTime);
+		sf::Text pauseText = createText("Pause", sf::Color::White);
+		sf::FloatRect box = pauseText.getLocalBounds();
+		pauseText.setCharacterSize(75);
+		displayText(pauseText, box.width, box.height, WINDOW_WIDTH / 2 - box.width / 4, 200);
 	}
 	else if (gameState == GameState::gameover) //si la partie est finie
 	{
@@ -220,7 +222,7 @@ void Game::CheckForCollisions()
 		float x2 = pbBounds.left + pbBounds.width; //right x 
 		float y1 = pbBounds.top; //top y 
 		float y2 = pbBounds.top + pbBounds.height; //bot y		
-		 
+
 		for (size_t j = 0; j < enemyManager.enemies.size(); j++)
 		{
 			sf::FloatRect enemyBounds = enemyManager.enemies[j].sprite.getGlobalBounds();
@@ -296,7 +298,7 @@ void Game::ProcessEvents()
 
 void Game::HandleEvent(sf::Event event, bool isTrue)
 {
-	if (isTrue)
+	if (isTrue && gameState == GameState::game)
 	{
 		if (event.key.code == 57) //spacebar
 		{
@@ -316,11 +318,13 @@ void Game::HandleEvent(sf::Event event, bool isTrue)
 		}
 		else if (event.key.code == 36) //echap
 		{
-			exit(0);
+			gameState = GameState::pause;
+			isLeftArrowPressed = false;
+			isRightArrowPressed = false;
 		}
 
 	}
-	else
+	else if (!isTrue && gameState == GameState::game)
 	{
 		if (event.key.code == 57) //spacebar
 		{
@@ -333,6 +337,13 @@ void Game::HandleEvent(sf::Event event, bool isTrue)
 		else if (event.key.code == 72) //right arrow
 		{
 			isRightArrowPressed = false;
+		}
+	}
+	else if (isTrue && gameState == GameState::pause)
+	{
+		if (event.key.code == 36) //echap
+		{
+			gameState = GameState::game;
 		}
 	}
 }

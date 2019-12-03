@@ -10,11 +10,14 @@ public:
 
 	sf::Texture* bulletTexture;
 
-	Enemy(float, float, sf::Texture&);
-	Enemy(float, float, float, sf::Texture&);
+	float shootingTimer;
+	float currentTimer = 0.0f;
 
+	Enemy(float, float, sf::Texture&);
+	Enemy(float, float, float, float, sf::Texture&);
+
+	float RandomFloat(float, float);
 	void Move(bool);
 	Bullet Shoot();
-	void ShootManager();
 private:
 };

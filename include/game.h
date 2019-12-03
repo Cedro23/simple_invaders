@@ -2,6 +2,7 @@
 #include "invaders.h"
 #include "player.h"
 #include "enemyManager.h"
+#include "button.h"
 
 /*
 ** Game handling
@@ -21,11 +22,15 @@ private:
 
 	//Gamestates
 	enum class GameState {
-		menu,
-		game,
-		gameover
+		menu,		// codé
+		game,		// codé
+		pause,		// à coder
+		gameover,	// partiellement codé
+		howtoplay,	// à coder
+		highscore,	// à coder
+		save		// à coder
 	};
-	GameState gameState = GameState::game;
+	GameState gameState = GameState::menu;
 	void UpdateGameState(GameState);
 
 	//Entities manager
@@ -67,10 +72,18 @@ private:
 	int enemyShootCounter = 3;
 	bool isEnemyShooting = true;
 	float cdTimer = 0.0f;
-	float cooldown = 2.0f;
+	float maxCooldown = 60.0f;
 
 	//Levels
 	float enemySpeed = 1.0f;
+
+	//Buttons
+	sf::Color activeColor = sf::Color(55.0f, 55.0f, 55.0f);
+	sf::Color hoverColor = sf::Color(150.0f, 150.0f, 150.0f);
+
+	Button btnPlay = Button(480.0f, 200.0f, WINDOW_WIDTH / 4, 80.0f, &font, "Play", sf::Color::Black, hoverColor, activeColor);
+	Button btnHowToPlay = Button(480.0f, 400.0f, WINDOW_WIDTH / 4, 80.0f, &font, "How to play", sf::Color::Black, hoverColor, activeColor);
+	Button btnQuit = Button(480.0f, 600.0f, WINDOW_WIDTH / 4, 80.0f, &font, "Quit", sf::Color::Black, hoverColor, activeColor);
 	
 public:
     Game(void);
