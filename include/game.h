@@ -84,7 +84,11 @@ private:
 	Button btnPlay = Button(480.0f, 200.0f, WINDOW_WIDTH / 4, 80.0f, &font, "Play", sf::Color::Black, hoverColor, activeColor);
 	Button btnHowToPlay = Button(480.0f, 400.0f, WINDOW_WIDTH / 4, 80.0f, &font, "How to play", sf::Color::Black, hoverColor, activeColor);
 	Button btnQuit = Button(480.0f, 600.0f, WINDOW_WIDTH / 4, 80.0f, &font, "Quit", sf::Color::Black, hoverColor, activeColor);
-	
+	Button btnMainMenu = Button(480.0f, 400.0f, WINDOW_WIDTH / 4, 80.0f, &font, "Main Menu", sf::Color::Black, hoverColor, activeColor);
+	Button btnSmallMainMenu = Button(800.0f, 800.0f, WINDOW_WIDTH / 4, 80.0f, &font, "Main Menu", sf::Color::Black, hoverColor, activeColor);
+
+	bool mouseClick = false;
+
 public:
     Game(void);
     ~Game();

@@ -23,8 +23,7 @@ void Game::load()
 	enemyBulletTexture.loadFromFile("assets/img/dosia_bullet.png");
 	font.loadFromFile("assets/fonts/cs_regular.ttf");
 
-	enemyManager.SpawnEnemies(enemyBulletTexture);
-	InitTextures();
+	
 }
 
 #pragma region Text
@@ -81,14 +80,27 @@ void Game::update(sf::Time elapsedTime)
 {
 	if (gameState == GameState::menu) //si dans le menu
 	{
-		//create menu
+		sf::Text title = createText("S1mple-Invaders", sf::Color::White);
+		title.setCharacterSize(50);
+		displayText(title, 0, 0, 400.0f, 50.0f);
 		btnPlay.Render(&window);
 		btnHowToPlay.Render(&window);
 		btnQuit.Render(&window);
 
-		btnPlay.Update((sf::Vector2f)sf::Mouse::getPosition(window));
-		btnHowToPlay.Update((sf::Vector2f)sf::Mouse::getPosition(window));
-		btnQuit.Update((sf::Vector2f)sf::Mouse::getPosition(window));
+		if (btnPlay.Update((sf::Vector2f)sf::Mouse::getPosition(window)))
+		{
+			gameState = GameState::game;
+			enemyManager.SpawnEnemies(enemyBulletTexture);
+			InitTextures();
+		}
+		else if (btnHowToPlay.Update((sf::Vector2f)sf::Mouse::getPosition(window)))
+		{
+			gameState = GameState::howtoplay;
+		}
+		else if (btnQuit.Update((sf::Vector2f)sf::Mouse::getPosition(window)))
+		{
+			window.close();
+		}
 	}
 	else if (gameState == GameState::game) //si la partie est en cours
 	{
@@ -99,7 +111,6 @@ void Game::update(sf::Time elapsedTime)
 		}
 		if (enemyManager.enemies.size() <= 0)
 		{
-			//center player ?
 			playerBullets.clear();
 			enemiesBullets.clear();
 			enemySpeed *= 1.07f;
@@ -135,13 +146,66 @@ void Game::update(sf::Time elapsedTime)
 		sf::FloatRect box = pauseText.getLocalBounds();
 		pauseText.setCharacterSize(75);
 		displayText(pauseText, box.width, box.height, WINDOW_WIDTH / 2 - box.width / 4, 200);
+
+		btnQuit.Render(&window);
+		btnMainMenu.Render(&window);
+
+		if (btnQuit.Update((sf::Vector2f)sf::Mouse::getPosition(window)))
+		{
+			window.close();
+		}
+		else if (btnMainMenu.Update((sf::Vector2f)sf::Mouse::getPosition(window)))
+		{
+			gameState = GameState::menu;
+			currentScore = 0;
+			timer = sf::Time::Zero;
+			enemyManager.ClearEnemies();
+			enemiesBullets.clear();
+			playerBullets.clear();
+		}
+	}
+	else if (gameState == GameState::howtoplay)
+	{
+		sf::Text goal = createText("Goal is to stop S1mple from invading the earth. \nTake care to dodge Dosia or you'll die.", sf::Color::White);
+		sf::Text arrowControl = createText("Arrows : Move left and right", sf::Color::White);
+		sf::Text spaceControl = createText("Spacebar : Shoot", sf::Color::White);
+		sf::Text escapeControl = createText("Esc : Pause/Unpause", sf::Color::White);
+
+		displayText(goal, 0, 0, 400.0f, 150.0f);
+		displayText(arrowControl, 0, 0, 400.0f, 250.0f);
+		displayText(spaceControl, 0, 0, 400.0f, 350.0f);
+		displayText(escapeControl, 0, 0, 400.0f, 450.0f);
+
+		btnSmallMainMenu.Render(&window);
+
+		if (btnSmallMainMenu.Update((sf::Vector2f)sf::Mouse::getPosition(window)))
+		{
+			gameState = GameState::menu;
+		}
 	}
 	else if (gameState == GameState::gameover) //si la partie est finie
 	{
 		sf::Text gameOverText = createText("Game Over", sf::Color::White);
 		sf::FloatRect box = gameOverText.getLocalBounds();
 		gameOverText.setCharacterSize(75);
-		displayText(gameOverText, box.width, box.height, WINDOW_WIDTH / 2 - box.width / 4, WINDOW_HEIGHT / 2);
+		displayText(gameOverText, box.width, box.height, WINDOW_WIDTH / 2 - box.width / 4, 150.0f);
+
+		btnMainMenu.Render(&window);
+		btnQuit.Render(&window);
+
+		if (btnMainMenu.Update((sf::Vector2f)sf::Mouse::getPosition(window)))
+		{
+			gameState = GameState::menu;
+			currentScore = 0;
+			timer = sf::Time::Zero;
+			enemyManager.ClearEnemies();
+			enemiesBullets.clear();
+			playerBullets.clear();
+		}
+		else if (btnQuit.Update((sf::Vector2f)sf::Mouse::getPosition(window)))
+		{
+			window.close();
+		}
 	}
 }
 

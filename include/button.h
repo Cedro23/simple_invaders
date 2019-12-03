@@ -19,6 +19,6 @@ public:
 		sf::Color, sf::Color, sf::Color);
 	~Button();
 
-	void Update(const sf::Vector2f);
+	bool Update(const sf::Vector2f);
 	void Render(sf::RenderTarget*);
 };

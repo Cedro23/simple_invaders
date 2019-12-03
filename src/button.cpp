@@ -30,13 +30,12 @@ Button::Button(float x, float y, float width, float height,
 	this->idleColor = idleColor;
 	this->hoverColor = hoverColor;
 	this->activeColor = activeColor;
-
 }
 
 Button::~Button()
 {}
 
-void Button::Update(const sf::Vector2f mousePos)
+bool Button::Update(const sf::Vector2f mousePos)
 {
 	//Update booleans for hover and pressed
 
@@ -50,6 +49,8 @@ void Button::Update(const sf::Vector2f mousePos)
 		{
 			this->shape.setOutlineColor(activeColor);
 			this->text.setColor(activeColor);
+
+			return true;
 		}
 	}
 	else
@@ -58,6 +59,8 @@ void Button::Update(const sf::Vector2f mousePos)
 		this->shape.setOutlineThickness(4.0f);
 		this->text.setColor(sf::Color::White);
 	}
+
+	return false;
 }
 
 void Button::Render(sf::RenderTarget* target)
